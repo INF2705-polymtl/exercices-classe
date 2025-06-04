@@ -21,10 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{3da5637c-332f-43f9-896c-109c7e0be889}</ProjectGuid>
-    <RootNamespace>C02_Quiz_NuanceursFragments</RootNamespace>
+    <ProjectGuid>{00b0f3ca-eec4-4050-96f6-cd621920399e}</ProjectGuid>
+    <RootNamespace>C02_Quiz_NuanceursSommets</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>C02_Quiz_NuanceurFragments</ProjectName>
+    <ProjectName>C02_Exo_NuanceurSommets</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
