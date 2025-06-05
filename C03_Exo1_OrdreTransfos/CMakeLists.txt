@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5.0)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 # Le nom du projet.
-project(C02_Exo1_NuanceurSommets)
+project(C03_Exo1_OrdreTransfos)
 
 # On met les fichiers sources (incluant les entêtes)
 set(ALL_FILES

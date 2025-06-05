@@ -27,15 +27,11 @@ using namespace glm;
 
 struct App : public OpenGLApplication
 {
-	Mesh cube;
+	Mesh triangle;
 
 	ShaderProgram basicProg;
 
-	TransformStack model = {"M"};
-	TransformStack view = {"V"};
-	TransformStack projection = {"P"};
-
-	OrbitCamera camera = {5, 30, 30, 0};
+	float angle = 0;
 
 	// Appelée avant la première trame.
 	void init() override {
@@ -61,21 +57,22 @@ struct App : public OpenGLApplication
 
 		loadShaders();
 
-		cube = Mesh::loadFromWavefrontFile("cube.obj")[0];
-		cube.setup();
-
-		camera.updateProgram(basicProg, view);
-		applyPerspective();
-		model.loadIdentity();
+		triangle.vertices = {
+			{{-0.5f, -0.5f, 0.0f}, {1, 0, 0}, {}},
+			{{ 0.5f, -0.5f, 0.0f}, {0, 1, 0}, {}},
+			{{ 0.0f,  0.5f, 0.0f}, {0, 0, 1}, {}},
+		};
+		triangle.setup();
 	}
 
 	// Appelée à chaque trame. Le buffer swap est fait juste après.
 	void drawFrame() override {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+		angle += 1;
 		basicProg.use();
-		basicProg.setUniform(model);
-		cube.draw();
+		basicProg.setFloat("angle", angle);
+		triangle.draw();
 	}
 
 	// Appelée lorsque la fenêtre se ferme.
@@ -86,14 +83,6 @@ struct App : public OpenGLApplication
 
 	// Appelée lors d'une touche de clavier.
 	void onKeyPress(const sf::Event::KeyEvent& key) override {
-		// La touche R réinitialise la position de la caméra.
-		// Les touches + et - rapprochent et éloignent la caméra orbitale.
-		// Les touches haut/bas change l'élévation ou la latitude de la caméra orbitale.
-		// Les touches gauche/droite change la longitude ou le roulement (avec shift) de la caméra orbitale.
-
-		camera.handleKeyEvent(key, 5, 0.5, {5, 30, 30, 0});
-		camera.updateProgram(basicProg, view);
-
 		using enum sf::Keyboard::Key;
 		switch (key.code) {
 		case F5: {
@@ -101,51 +90,6 @@ struct App : public OpenGLApplication
 			std::cout << "Capture d'écran dans " << path << std::endl;
 			break;
 		}}
-	}
-
-	// Appelée lors d'une touche de clavier relachée.
-	void onKeyRelease(const sf::Event::KeyEvent& key) override {
-		
-	}
-
-	// Appelée lors d'un bouton de souris appuyé.
-	void onMouseButtonPress(const sf::Event::MouseButtonEvent& mouseBtn) override {
-		
-	}
-
-	// Appelée lors d'un bouton de souris relâché.
-	void onMouseButtonRelease(const sf::Event::MouseButtonEvent& mouseBtn) override {
-		
-	}
-
-	// Appelée lors d'un mouvement de souris.
-	void onMouseMove(const sf::Event::MouseMoveEvent& mouseDelta) override {
-		// Mettre à jour la caméra si on a un clic de la roulette.
-		auto& mouse = getMouse();
-		camera.handleMouseMoveEvent(mouseDelta, mouse, deltaTime_ / (0.7f / 30));
-		camera.updateProgram(basicProg, view);
-	}
-
-	// Appelée lors d'un défilement de souris.
-	void onMouseScroll(const sf::Event::MouseWheelScrollEvent& mouseScroll) override {
-		// Zoom in/out
-		camera.altitude -= mouseScroll.delta;
-		camera.updateProgram(basicProg, view);
-	}
-
-	// Appelée lorsque la fenêtre se redimensionne (juste après le redimensionnement).
-	void onResize(const sf::Event::SizeEvent& event) override {
-		applyPerspective();
-	}
-
-	// Appelée sur un évènement autre que Closed, Resized ou KeyPressed.
-	void onEvent(const sf::Event& event) override {
-		
-	}
-
-	void applyPerspective(float fovy = 50) {
-		projection.perspective(fovy, getWindowAspect(), 0.1f, 100.0f);
-		basicProg.setMat(projection);
 	}
 
 	void loadShaders() {
@@ -163,5 +107,5 @@ int main(int argc, char* argv[]) {
 	settings.context.antialiasingLevel = 4;
 
 	App app;
-	app.run(argc, argv, "Exercice cours 2 : Nuanceur de sommets", settings);
+	app.run(argc, argv, "Introduction cours 3 : Transformations", settings);
 }

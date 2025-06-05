@@ -24,7 +24,7 @@
     <ProjectGuid>{3da5637c-332f-43f9-896c-109c7e0be889}</ProjectGuid>
     <RootNamespace>C02_Quiz_NuanceursFragments</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>C02_Exo_NuanceurFragments</ProjectName>
+    <ProjectName>C02_Exo2_NuanceurFragments</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -163,5 +163,5 @@ int main(int argc, char* argv[]) {
 	settings.context.antialiasingLevel = 4;
 
 	App app;
-	app.run(argc, argv, "Quiz Cours 2 : Nuanceur de fragments", settings);
+	app.run(argc, argv, "Exercice cours 2 : Nuanceur de fragments", settings);
 }
