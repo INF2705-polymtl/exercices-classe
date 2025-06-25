@@ -103,21 +103,6 @@ struct App : public OpenGLApplication
 		}}
 	}
 
-	// Appelée lors d'une touche de clavier relachée.
-	void onKeyRelease(const sf::Event::KeyEvent& key) override {
-		
-	}
-
-	// Appelée lors d'un bouton de souris appuyé.
-	void onMouseButtonPress(const sf::Event::MouseButtonEvent& mouseBtn) override {
-		
-	}
-
-	// Appelée lors d'un bouton de souris relâché.
-	void onMouseButtonRelease(const sf::Event::MouseButtonEvent& mouseBtn) override {
-		
-	}
-
 	// Appelée lors d'un mouvement de souris.
 	void onMouseMove(const sf::Event::MouseMoveEvent& mouseDelta) override {
 		// Mettre à jour la caméra si on a un clic de la roulette.
@@ -136,11 +121,6 @@ struct App : public OpenGLApplication
 	// Appelée lorsque la fenêtre se redimensionne (juste après le redimensionnement).
 	void onResize(const sf::Event::SizeEvent& event) override {
 		applyPerspective();
-	}
-
-	// Appelée sur un évènement autre que Closed, Resized ou KeyPressed.
-	void onEvent(const sf::Event& event) override {
-		
 	}
 
 	void applyPerspective(float fovy = 50) {

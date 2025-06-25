@@ -27,15 +27,15 @@ using namespace glm;
 
 struct App : public OpenGLApplication
 {
-	Mesh cube;
+	Mesh square;
 
 	ShaderProgram basicProg;
 
-	TransformStack model = {"M"};
-	TransformStack view = {"V"};
-	TransformStack projection = {"P"};
+	TransformStack model = {"model"};
+	TransformStack view = {"view"};
+	TransformStack projection = {"projection"};
 
-	OrbitCamera camera = {5, 30, 30, 0};
+	OrbitCamera camera = {5, 0, 0, 0};
 
 	// Appelée avant la première trame.
 	void init() override {
@@ -61,12 +61,38 @@ struct App : public OpenGLApplication
 
 		loadShaders();
 
-		cube = Mesh::loadFromWavefrontFile("cube.obj")[0];
-		cube.setup();
+		square.vertices = {
+			{{-1, -1, 0}, {}, {}},
+			{{ 1, -1, 0}, {}, {}},
+			{{ 1,  1, 0}, {}, {}},
+			{{-1,  1, 0}, {}, {}},
+		};
+		square.indices = {
+			0, 1, 2,
+			0, 2, 3,
+		};
+		square.setup();
+
+		// Charge l'image du fichier.
+		sf::Image img;
+		img.loadFromFile("smiley.png");
+		// Système de coordonnées à l'envers.
+		img.flipVertically();
+		vec4 imgData[8 * 8] = {};
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++) {
+				// Conversion de byte en [0, 255] à float en [0, 1]
+				imgData[j * 8 + i].r = img.getPixel(i, j).r / 255.0f;
+				imgData[j * 8 + i].g = img.getPixel(i, j).g / 255.0f;
+				imgData[j * 8 + i].b = img.getPixel(i, j).b / 255.0f;
+				imgData[j * 8 + i].a = img.getPixel(i, j).a / 255.0f;
+			}
+
+		basicProg.use();
+		glUniform4fv(basicProg.getUniformLocation("img"), 8 * 8, (GLfloat*)&imgData);
 
 		camera.updateProgram(basicProg, view);
 		applyPerspective();
-		model.loadIdentity();
 	}
 
 	// Appelée à chaque trame. Le buffer swap est fait juste après.
@@ -74,8 +100,7 @@ struct App : public OpenGLApplication
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		basicProg.use();
-		basicProg.setUniform(model);
-		cube.draw();
+		square.draw();
 	}
 
 	// Appelée lorsque la fenêtre se ferme.
@@ -91,7 +116,7 @@ struct App : public OpenGLApplication
 		// Les touches haut/bas change l'élévation ou la latitude de la caméra orbitale.
 		// Les touches gauche/droite change la longitude ou le roulement (avec shift) de la caméra orbitale.
 
-		camera.handleKeyEvent(key, 5, 0.5, {5, 30, 30, 0});
+		camera.handleKeyEvent(key, 5, 0.5, {5, 0, 0, 0});
 		camera.updateProgram(basicProg, view);
 
 		using enum sf::Keyboard::Key;
@@ -130,7 +155,7 @@ struct App : public OpenGLApplication
 
 	void loadShaders() {
 		basicProg.create();
-		basicProg.attachSourceFile(GL_VERTEX_SHADER, "vert.glsl");
+		basicProg.attachSourceFile(GL_VERTEX_SHADER, "basic_vert.glsl");
 		basicProg.attachSourceFile(GL_FRAGMENT_SHADER, "frag.glsl");
 		basicProg.link();
 	}
@@ -143,5 +168,5 @@ int main(int argc, char* argv[]) {
 	settings.context.antialiasingLevel = 4;
 
 	App app;
-	app.run(argc, argv, "Exercice cours 2 : Nuanceur de sommets", settings);
+	app.run(argc, argv, "Introduction cours 4 : Image", settings);
 }
