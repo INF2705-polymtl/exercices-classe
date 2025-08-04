@@ -31,7 +31,6 @@ struct App : public OpenGLApplication
 
 	ShaderProgram basicProg;
 
-	TransformStack model = {"model"};
 	TransformStack view = {"view"};
 	TransformStack projection = {"projection"};
 
@@ -81,13 +80,14 @@ struct App : public OpenGLApplication
 
 		angle += 1; // Angle de rotation
 
+		mat4 m = mat4(1); // Matrice identité
 		// TODO: Appliquer les opérations dans le bon ordre
-		model.loadIdentity();
-		model./* TODO */;
-		model./* TODO */;
-		model./* TODO */;
+		// Voici les choix à réordonner :
+		m = scale(m, {0.5, 1, 1});
+		m = rotate(m, radians(angle), {0, 0, 1});
+		m = translate(m, {0, 1, 0});
 
-		basicProg.setMat(model);
+		basicProg.setMat("model", m);
 		triangle.draw(GL_TRIANGLES);
 	}
 
@@ -98,7 +98,7 @@ struct App : public OpenGLApplication
 	}
 
 	// Appelée lors d'une touche de clavier.
-	void onKeyPress(const sf::Event::KeyEvent& key) override {
+	void onKeyPress(const sf::Event::KeyPressed& key) override {
 		// La touche R réinitialise la position de la caméra.
 		// Les touches + et - rapprochent et éloignent la caméra orbitale.
 		// Les touches haut/bas change l'élévation ou la latitude de la caméra orbitale.
@@ -117,7 +117,7 @@ struct App : public OpenGLApplication
 	}
 
 	// Appelée lors d'un mouvement de souris.
-	void onMouseMove(const sf::Event::MouseMoveEvent& mouseDelta) override {
+	void onMouseMove(const sf::Event::MouseMoved& mouseDelta) override {
 		// Mettre à jour la caméra si on a un clic de la roulette.
 		auto& mouse = getMouse();
 		camera.handleMouseMoveEvent(mouseDelta, mouse, deltaTime_ / (0.7f / 30));
@@ -125,14 +125,14 @@ struct App : public OpenGLApplication
 	}
 
 	// Appelée lors d'un défilement de souris.
-	void onMouseScroll(const sf::Event::MouseWheelScrollEvent& mouseScroll) override {
+	void onMouseScroll(const sf::Event::MouseWheelScrolled& mouseScroll) override {
 		// Zoom in/out
 		camera.altitude -= mouseScroll.delta;
 		camera.updateProgram(basicProg, view);
 	}
 
 	// Appelée lorsque la fenêtre se redimensionne (juste après le redimensionnement).
-	void onResize(const sf::Event::SizeEvent& event) override {
+	void onResize(const sf::Event::Resized& event) override {
 		applyPerspective();
 	}
 
@@ -153,7 +153,7 @@ struct App : public OpenGLApplication
 int main(int argc, char* argv[]) {
 	WindowSettings settings = {};
 	settings.fps = 30;
-	settings.context.antialiasingLevel = 4;
+	settings.context.antiAliasingLevel = 4;
 
 	App app;
 	app.run(argc, argv, "Exercice cours 3 : Ordre des transformations", settings);

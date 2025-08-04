@@ -79,13 +79,13 @@ struct App : public OpenGLApplication
 		// Système de coordonnées à l'envers.
 		img.flipVertically();
 		vec4 imgData[8 * 8] = {};
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++) {
+		for (unsigned i = 0; i < 8; i++)
+			for (unsigned j = 0; j < 8; j++) {
 				// Conversion de byte en [0, 255] à float en [0, 1]
-				imgData[j * 8 + i].r = img.getPixel(i, j).r / 255.0f;
-				imgData[j * 8 + i].g = img.getPixel(i, j).g / 255.0f;
-				imgData[j * 8 + i].b = img.getPixel(i, j).b / 255.0f;
-				imgData[j * 8 + i].a = img.getPixel(i, j).a / 255.0f;
+				imgData[j * 8 + i].r = img.getPixel({i, j}).r / 255.0f;
+				imgData[j * 8 + i].g = img.getPixel({i, j}).g / 255.0f;
+				imgData[j * 8 + i].b = img.getPixel({i, j}).b / 255.0f;
+				imgData[j * 8 + i].a = img.getPixel({i, j}).a / 255.0f;
 			}
 
 		basicProg.use();
@@ -110,7 +110,7 @@ struct App : public OpenGLApplication
 	}
 
 	// Appelée lors d'une touche de clavier.
-	void onKeyPress(const sf::Event::KeyEvent& key) override {
+	void onKeyPress(const sf::Event::KeyPressed& key) override {
 		// La touche R réinitialise la position de la caméra.
 		// Les touches + et - rapprochent et éloignent la caméra orbitale.
 		// Les touches haut/bas change l'élévation ou la latitude de la caméra orbitale.
@@ -129,7 +129,7 @@ struct App : public OpenGLApplication
 	}
 
 	// Appelée lors d'un mouvement de souris.
-	void onMouseMove(const sf::Event::MouseMoveEvent& mouseDelta) override {
+	void onMouseMove(const sf::Event::MouseMoved& mouseDelta) override {
 		// Mettre à jour la caméra si on a un clic de la roulette.
 		auto& mouse = getMouse();
 		camera.handleMouseMoveEvent(mouseDelta, mouse, deltaTime_ / (0.7f / 30));
@@ -137,14 +137,14 @@ struct App : public OpenGLApplication
 	}
 
 	// Appelée lors d'un défilement de souris.
-	void onMouseScroll(const sf::Event::MouseWheelScrollEvent& mouseScroll) override {
+	void onMouseScroll(const sf::Event::MouseWheelScrolled& mouseScroll) override {
 		// Zoom in/out
 		camera.altitude -= mouseScroll.delta;
 		camera.updateProgram(basicProg, view);
 	}
 
 	// Appelée lorsque la fenêtre se redimensionne (juste après le redimensionnement).
-	void onResize(const sf::Event::SizeEvent& event) override {
+	void onResize(const sf::Event::Resized& event) override {
 		applyPerspective();
 	}
 
@@ -165,7 +165,7 @@ struct App : public OpenGLApplication
 int main(int argc, char* argv[]) {
 	WindowSettings settings = {};
 	settings.fps = 30;
-	settings.context.antialiasingLevel = 4;
+	settings.context.antiAliasingLevel = 4;
 
 	App app;
 	app.run(argc, argv, "Introduction cours 4 : Image", settings);
