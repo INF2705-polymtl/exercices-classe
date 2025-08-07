@@ -13,6 +13,7 @@ out vec4 color;
 
 void main() {
 	gl_Position = vec4(pos, 1);
+	float rads = radians(angle);
 	gl_Position.x = /* TODO */;
 	gl_Position.y = /* TODO */;
 	color = vec4(vertColor, 1);
