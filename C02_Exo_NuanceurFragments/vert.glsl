@@ -3,7 +3,7 @@
 
 uniform mat4 P,V,M;
 
-in vec3 pos;
+layout(location = 0) in vec3 pos;
 
 out vec4 color;
 
