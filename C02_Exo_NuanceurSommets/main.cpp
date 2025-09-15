@@ -66,7 +66,7 @@ struct App : public OpenGLApplication
 
 		camera.updateProgram(basicProg, view);
 		applyPerspective();
-		model.loadIdentity();
+		model.identity();
 	}
 
 	// Appelée à chaque trame. Le buffer swap est fait juste après.
